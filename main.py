@@ -80,12 +80,12 @@ app = FastAPI()
 #         return "Спасибо за оценку"
 #     return "Ты даун сам себе ставить заниженную оценку?"
 
-@app.get("/")
-def home_page():
-    return {"message": "Привет, Хабр!"}
+# @app.get("/")
+# def home_page():
+#     return {"message": "Привет, Хабр!"}
 
 #сам сделал
-@app.get("/students/")
+@app.get("/students")
 def get_all_students(course: Optional[int] = None, student_id: Optional[int] = None):
     students = json_to_dict_list(path_to_json)
 
@@ -110,11 +110,22 @@ def get_all_students(course: Optional[int] = None, student_id: Optional[int] = N
                 return_list.append(student)
         return return_list
 
+# @app.get("/students/{student_id}")
+# def get_student_id(student_id: int):
+#     student = json_to_dict_list(path_to_json)
+    
+#     if student_id is not None:
+#         return_list = []
+#         for st in student:
+#             if st["student_id"] == student_id:
+#                 return_list.append(st)
+#         return return_list
+#     return student
 # or
 
 #с хабра пример
 @app.get("/students/{course}")
-def get_all_students_course(course: int, major: Optional[str] = None, enrollment_year: Optional[int] = 2018):
+def get_all_students_course(course: int, major: Optional[str] = None, enrollment_year: Optional[int] = None, student_id: Optional[int] = None):
     students = json_to_dict_list(path_to_json)
     filtered_students = []
     for student in students:
@@ -127,6 +138,8 @@ def get_all_students_course(course: int, major: Optional[str] = None, enrollment
     if enrollment_year:
         filtered_students = [student for student in filtered_students if student['enrollment_year'] == enrollment_year]
 
-    return filtered_students
+    if student_id:
+        filtered_students = [student for student in filtered_students if student['student_id'] == student_id]
 
+    return filtered_students
 
